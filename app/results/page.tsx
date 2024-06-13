@@ -22,16 +22,23 @@ export default function Results() {
   thumbnail: string
  }
 
+ const fetchProducts = async () => {
+  try {
+   const response = await fetch('http://localhost:3000/api')
+   if (response) {
+    const { data } = await response.json()
+    console.log(data)
+    if (data) setProducts(data.products)
+   }
+  } catch (error) {
+   console.log(error)
+  }
+ }
+
  //Fetch products on component mount
  useEffect(() => {
-  const fetchProducts = async () => {
-   const response = await fetch('https://dummyjson.com/products')
-   const data = await response.json()
-   setProducts(data) // No type assertion needed in JavaScript
-  }
-
   fetchProducts()
- }, [param])
+ }, [])
 
  // Handle search term from query parameter
  useEffect(() => {
@@ -64,26 +71,25 @@ export default function Results() {
     <Tag items="smartphones" itemsNum={5} types="fragances" typesNum={2} />
    </section>
    <Card />
-   {products.length > 0 &&
-    products.map((product: Product) => (
-     <div key={product.id} className="mt-25 flex items-center justify-between">
-      <img
-       className="h-150 w-150 rounded-full"
-       src={product.thumbnail}
-       alt={product.title}
-      />
-      <div className="w-205">
-       <h1 className="text-2xl font-extrabold">{product.title}</h1>
-       <p className="font-light">{product.description}</p>
-       <div className="flex justify-between">
-        <span className="inline font-sans text-2xl font-black">
-         {product.price}
-        </span>
-        <StarRating />
-       </div>
+   {products?.map((product: Product) => (
+    <div key={product.id} className="mt-25 flex items-center justify-evenly">
+     <img
+      className="h-150 w-150 rounded-full"
+      src={product.thumbnail}
+      alt={product.title}
+     />
+     <div className="w-205">
+      <h1 className="text-2xl font-extrabold">{product.title}</h1>
+      <p className="max-w- font-light">{product.description}</p>
+      <div className="flex justify-between">
+       <span className="inline font-sans text-2xl font-black">
+        {product.price}
+       </span>
+       <StarRating />
       </div>
      </div>
-    ))}
+    </div>
+   ))}
   </div>
  )
 }

@@ -25,12 +25,12 @@ export default function Results() {
   brand: string
   category: string
   thumbnail: string
-  images: string[]
+  image: string[]
  }
 
  const fetchProducts = async () => {
   try {
-   const response = await fetch('https://dummyjson.com/products')
+   const response = await fetch('http://localhost:3000/api')
    if (response) {
     const { data } = await response.json()
     console.log(data)
@@ -70,7 +70,7 @@ export default function Results() {
     <div className="mt-25 flex items-center justify-between">
      <img
       className="h-150 w-150 rounded-full"
-      src={product.thumbnail}
+      src={product.image}
       alt={product.title}
      />
      <div className="w-205">
