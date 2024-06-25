@@ -1,7 +1,6 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import BazarIcon from '../ui/BazarIcon'
-import Tag from '../ui/Tag'
 import StarRating from '../ui/StarRating'
 import { useSearchParams } from 'next/navigation'
 import Lupa from '../ui/Lupa'
@@ -10,15 +9,23 @@ import Lupa from '../ui/Lupa'
 export default function Results() {
  const searchParams = useSearchParams()
  const param = searchParams.get('search')
- const [products, setProducts] = useState([])
+ const [products, setProducts] = useState<Product[]>([])
  const [searchTerm, setSearchTerm] = useState('')
+ const [categories, setCategories] = useState<string[]>([])
+ const [brands, setBrands] = useState<string[]>([])
 
  interface Product {
   id: number
   title: string
   description: string
   price: number
+  discountPercentage: number
+  rating: number
+  stock: number
+  brand: string
+  category: string
   thumbnail: string
+  image: string[]
  }
 
  const fetchProducts = async () => {
@@ -49,43 +56,73 @@ export default function Results() {
   }
  }, [param])
 
- const filterProducts = (products: Product[], searchTerm: string) => {
-  if (!searchTerm) return products // No search term, return all products
+ const filteredProducts = useMemo(() => {
+  if (!searchTerm) return products
 
-  const filteredProducts = products.filter((product) =>
+  const filteredProductsBySearch = products.filter((product) =>
    product.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
-  return filteredProducts
- }
+
+  return filteredProductsBySearch
+ }, [products, searchTerm])
+
+ useEffect(() => {
+  if (!filteredProducts.length) return
+
+  const productCategorySet = new Set(
+   filteredProducts.map((product) => product.category)
+  )
+  const uniqueCategories = [...productCategorySet]
+  setCategories(uniqueCategories)
+
+  const productBrandSet = new Set(
+   filteredProducts.map((product) => product.brand)
+  )
+  const uniqueBrands = [...productBrandSet]
+  setBrands(uniqueBrands)
+ }, [filteredProducts])
 
  return (
   <div>
    <header className="h-100 mt-5 flex items-center justify-evenly">
     <BazarIcon height={80} width={65} />
     <div className="mt-[20px]">
-     <div
-      className={`shadow" mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200`}
-     >
+     <div className="mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200 shadow">
       <input
        className={`bg-gray-200 text-base outline-none `}
        type="text"
-       placeholder="laptops,smartphone,tablets... "
-       value={searchTerm}
-       onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        setSearchTerm(event.target.value)
-       }
+       placeholder={searchTerm}
+       onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <Lupa width={25} height={25} />
+      <svg
+       xmlns="http://www.w3.org/2000/svg"
+       width={25}
+       height={800}
+       fill="none"
+       viewBox="0 0 24 24"
+      >
+       <g stroke="#333" strokeWidth={1.8}>
+        <path d="M19.96 11.48a8.45 8.45 0 0 1-2.458 5.971 8.438 8.438 0 0 1-6.022 2.51 8.48 8.48 0 1 1 8.48-8.48Z" />
+        <path strokeLinecap="round" d="m18.155 18.155 3.732 3.732" />
+       </g>
+      </svg>
      </div>
     </div>
    </header>
    <h1 className="mt-5 text-center text-lg font-semibold">
-    Resultados de búsqueda de "{searchTerm}":
+    Resultados de búsqueda de "{searchTerm}": {filteredProducts.length}
    </h1>
    <section className="mt-5">
-    <Tag items="smartphones" itemsNum={5} types="fragances" typesNum={2} />
+    <div className="flex items-center justify-evenly text-base font-bold">
+     <div className="flex h-[40px] w-[150px] items-center justify-center bg-[#5f70b8cb]">
+      <span>Categories - {categories.length}</span>
+     </div>
+     <div className=" flex h-[40px] w-[150px] items-center justify-center bg-red-600">
+      <span>Brands - {brands.length}</span>
+     </div>
+    </div>
    </section>
-   {filterProducts(products, searchTerm)?.map((product: Product) => (
+   {filteredProducts.map((product: Product) => (
     <div
      key={product.id}
      className="mb-[20px] mt-[20px] flex items-center justify-evenly"
