@@ -2,8 +2,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import BazarIcon from '../ui/BazarIcon'
 import StarRating from '../ui/StarRating'
-import { useSearchParams } from 'next/navigation'
-import Lupa from '../ui/Lupa'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 // Results component function
 export default function Results() {
@@ -13,6 +12,10 @@ export default function Results() {
  const [searchTerm, setSearchTerm] = useState('')
  const [categories, setCategories] = useState<string[]>([])
  const [brands, setBrands] = useState<string[]>([])
+ const router = useRouter()
+ const sendTerm = (formData: any) => {
+  setSearchTerm(formData.get('term'))
+ }
 
  interface Product {
   id: number
@@ -30,7 +33,7 @@ export default function Results() {
 
  const fetchProducts = async () => {
   try {
-   const response = await fetch('http://localhost:3000/api')
+   const response = await fetch('/api')
    if (response) {
     const { data } = await response.json()
     console.log(data)
@@ -82,31 +85,42 @@ export default function Results() {
   setBrands(uniqueBrands)
  }, [filteredProducts])
 
+ const handleItemClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const itemId = event.currentTarget.id
+  router.push(`http://localhost:3000/details?id=${itemId}`)
+  console.log(itemId)
+ }
+
  return (
   <div>
    <header className="h-100 mt-5 flex items-center justify-evenly">
     <BazarIcon height={80} width={65} />
     <div className="mt-[20px]">
-     <div className="mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200 shadow">
+     <form
+      action={sendTerm}
+      className="mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200 shadow"
+     >
       <input
        className={`bg-gray-200 text-base outline-none `}
        type="text"
-       placeholder={searchTerm}
-       onChange={(e) => setSearchTerm(e.target.value)}
+       name="term"
+       placeholder="Buscar"
       />
-      <svg
-       xmlns="http://www.w3.org/2000/svg"
-       width={25}
-       height={800}
-       fill="none"
-       viewBox="0 0 24 24"
-      >
-       <g stroke="#333" strokeWidth={1.8}>
-        <path d="M19.96 11.48a8.45 8.45 0 0 1-2.458 5.971 8.438 8.438 0 0 1-6.022 2.51 8.48 8.48 0 1 1 8.48-8.48Z" />
-        <path strokeLinecap="round" d="m18.155 18.155 3.732 3.732" />
-       </g>
-      </svg>
-     </div>
+      <button type="submit">
+       <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={25}
+        height={800}
+        fill="none"
+        viewBox="0 0 24 24"
+       >
+        <g stroke="#333" strokeWidth={1.8}>
+         <path d="M19.96 11.48a8.45 8.45 0 0 1-2.458 5.971 8.438 8.438 0 0 1-6.022 2.51 8.48 8.48 0 1 1 8.48-8.48Z" />
+         <path strokeLinecap="round" d="m18.155 18.155 3.732 3.732" />
+        </g>
+       </svg>
+      </button>
+     </form>
     </div>
    </header>
    <h1 className="mt-5 text-center text-lg font-semibold">
@@ -124,8 +138,9 @@ export default function Results() {
    </section>
    {filteredProducts.map((product: Product) => (
     <div
-     key={product.id}
-     className="mb-[20px] mt-[20px] flex items-center justify-evenly"
+     id={product.id.toString()}
+     className="mb-[20px] mt-[20px] flex cursor-pointer items-center justify-evenly"
+     onClick={handleItemClick}
     >
      <img
       className="h-[150px] w-[150px] rounded-full"

@@ -1,122 +1,129 @@
 'use client'
-import { useState, useEffect } from 'react'
-import BazarIcon from '../ui/BazarIcon'
-import Tag from '../ui/Tag'
-import Card from '../ui/Card'
-import StarRating from '../ui/StarRating'
 import { useSearchParams } from 'next/navigation'
-import Lupa from '../ui/Lupa'
+import BazarIcon from '../ui/BazarIcon'
+import Button from '../ui/Button'
+import Input from '../ui/Input'
+import StarRating from '../ui/StarRating'
+import { useEffect, useState } from 'react'
 
-// Results component function
-export default function Results() {
+interface Product {
+ id: number
+ title: string
+ description: string
+ price: string
+ discounPercentage: number
+ rating: number
+ stock: number
+ brand: string
+ thumbnail: string
+ images: string[]
+}
+
+export default function Details() {
  const searchParams = useSearchParams()
- const param = searchParams.get('search')
- const [products, setProducts] = useState([])
- const [searchTerm, setSearchTerm] = useState('')
+ const param = searchParams.get('id')
 
- interface Product {
-  id: number
-  title: string
-  description: string
-  price: number
-  discountPercentage: number
-  rating: number
-  stock: number
-  brand: string
-  category: string
-  thumbnail: string
-  image: string[]
- }
+ const [productData, setProductData] = useState<Product | null>(null)
+ const [isLoading, setLoading] = useState(false)
+ const [error, setError] = useState(null)
 
- const fetchProducts = async () => {
-  try {
-   const response = await fetch('http://localhost:3000/api')
-   if (response) {
-    const { data } = await response.json()
+ useEffect(() => {
+  const fetchData = async () => {
+   setLoading(true)
+   setError(null)
+
+   try {
+    const response = await fetch(`http://localhost:3000/api/${param}`)
+
+    if (!response.ok) {
+     throw new Error(`API request failed with status${response.status}`)
+    }
+
+    const data = await response.json()
     console.log(data)
-    if (data) setProducts(data.products)
+    setProductData(data.data)
+   } catch (err) {
+    setError(null)
+   } finally {
+    setLoading(false)
    }
-  } catch (error) {
-   console.log(error)
   }
- }
-
- useEffect(() => {
-  fetchProducts()
- }, [])
-
- useEffect(() => {
   if (param) {
-   setSearchTerm(param)
-  } else {
-   // Handle the case where router.query is undefined
-   console.error('router.query is undefined')
+   fetchData()
   }
  }, [param])
 
- const filterProducts = (products: Product[], searchTerm: string) => {
-  if (!searchTerm) return products // No search term, return all products
-
-  const filteredProducts = products.filter((product) =>
-   product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-  return filteredProducts
+ if (isLoading) {
+  return console.log('Loading...')
  }
+
+ if (error) {
+  return console.log('ERROR')
+ }
+
+ if (!productData) {
+  return console.log('Product not found')
+ }
+
+ const {
+  id,
+  title,
+  description,
+  price,
+  discounPercentage,
+  rating,
+  stock,
+  brand,
+  thumbnail,
+  images,
+ } = productData
 
  return (
   <div>
-   <header className="h-100 mt-5 flex items-center justify-evenly">
+   <header className="mt-[15px] flex h-[100px] items-center justify-evenly">
     <BazarIcon height={80} width={65} />
-    <div className="mt-[20px]">
-     <div
-      className={`shadow" mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200`}
-     >
-      <input
-       className={`bg-gray-200 text-base outline-none `}
-       type="text"
-       placeholder="laptops,smartphone,tablets... "
-       value={searchTerm}
-       onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        setSearchTerm(event.target.value)
-       }
-      />
-      <Lupa width={25} height={25} />
-     </div>
+    <div className="mt-[12px]">
+     <Input
+      measure={'h-[40px] w-[270px]'}
+      lensHeight={25}
+      lensWidth={25}
+      fontSize="text-base"
+     />
     </div>
    </header>
-   <h1 className="mt-5 text-center text-lg font-semibold">
-    Resultados de búsqueda de "{searchTerm}":
-   </h1>
-   <section className="mt-5">
-    <Tag items="smartphones" itemsNum={5} types="fragances" typesNum={2} />
-   </section>
-   <Card />
-   {filterProducts(products, searchTerm)?.map((product: Product) => (
-    <div
-     key={product.id}
-     className="mb-[20px] mt-[20px] flex items-center justify-evenly"
-    >
+   <>
+    <div className="flex items-center justify-evenly">
      <img
-      className="h-[150px] w-[150px] rounded-full"
-      src={product.thumbnail}
-      alt={product.title}
+      className="h-[210px] w-[210px] rounded-full"
+      src={thumbnail}
+      alt={title}
      />
-     <div className="w-205">
-      <h1 className="max-w-[200px] overflow-hidden overflow-ellipsis whitespace-nowrap text-2xl font-extrabold">
-       {product.title}
-      </h1>
-      <p className="max-w-[200px] overflow-ellipsis font-light">
-       {product.description}
-      </p>
-      <div className="flex justify-between">
-       <span className="inline font-sans text-2xl font-black">
-        {product.price}
-       </span>
-       <StarRating />
-      </div>
+     <div className=" flex-wrap">
+      {images.map((imageURL) => (
+       <img
+        className="flex h-[80px] w-[80px] rounded-full"
+        src={imageURL}
+        alt={title}
+        key={imageURL}
+       />
+      ))}
      </div>
     </div>
-   ))}
+    <section className="mb-[60px]  flex-wrap items-center justify-center ">
+     <h1 className="mb-[15px] mt-[15px] text-center text-3xl font-extrabold">
+      {title}
+     </h1>
+     <div className="flex items-center justify-center">
+      <div className="mr-[30px]">
+       <h2 className="text-center font-sans text-2xl font-black">{price}</h2>
+       <span>{stock} disponibles</span>
+      </div>
+      <StarRating />
+     </div>
+     <p className="mx-auto mt-[40px] w-[320px] ">{description}</p>
+    </section>
+    <Button name="Comprar" measures="h-[80px] w-[320px]" fontSize="text-4xl" />
+   </>
   </div>
  )
 }
