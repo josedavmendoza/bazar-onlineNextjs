@@ -12,6 +12,7 @@ export default function Results() {
  const [searchTerm, setSearchTerm] = useState('')
  const [categories, setCategories] = useState<string[]>([])
  const [brands, setBrands] = useState<string[]>([])
+ const [rating, setRating] = useState<number[]>([])
  const router = useRouter()
  const sendTerm = (formData: any) => {
   setSearchTerm(formData.get('term'))
@@ -55,7 +56,7 @@ export default function Results() {
    setSearchTerm(param)
   } else {
    // Handle the case where router.query is undefined
-   console.error('router.query is undefined')
+   console.error('searchTerm is undefined')
   }
  }, [param])
 
@@ -83,6 +84,12 @@ export default function Results() {
   )
   const uniqueBrands = [...productBrandSet]
   setBrands(uniqueBrands)
+
+  const productRatingSet = new Set(
+   filteredProducts.map((product) => product.rating)
+  )
+  const uniqueRating = [...productRatingSet]
+  setRating(uniqueRating)
  }, [filteredProducts])
 
  const handleItemClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -98,13 +105,14 @@ export default function Results() {
     <div className="mt-[20px]">
      <form
       action={sendTerm}
-      className="mb-[15px] flex h-[40px] w-[270px] items-center justify-evenly rounded bg-gray-200 shadow"
+      className="mb-[15px] flex h-[40px] w-[270px] items-center justify-around rounded bg-gray-200 shadow"
      >
       <input
-       className={`bg-gray-200 text-base outline-none `}
+       className="max-w-[200px] bg-gray-200 text-base outline-none"
        type="text"
        name="term"
-       placeholder="Buscar"
+       placeholder="Search"
+       required
       />
       <button type="submit">
        <svg
@@ -124,7 +132,7 @@ export default function Results() {
     </div>
    </header>
    <h1 className="mt-5 text-center text-lg font-semibold">
-    Resultados de búsqueda de "{searchTerm}": {filteredProducts.length}
+    Search results for "{searchTerm}": {filteredProducts.length}
    </h1>
    <section className="mt-5">
     <div className="flex items-center justify-evenly text-base font-bold">
@@ -138,6 +146,7 @@ export default function Results() {
    </section>
    {filteredProducts.map((product: Product) => (
     <div
+     key={product.id}
      id={product.id.toString()}
      className="mb-[20px] mt-[20px] flex cursor-pointer items-center justify-evenly"
      onClick={handleItemClick}
@@ -158,7 +167,7 @@ export default function Results() {
        <span className="inline font-sans text-2xl font-black">
         {product.price}
        </span>
-       <StarRating />
+       <StarRating ratingProduct={product.rating} />
       </div>
      </div>
     </div>
