@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
 
-const API_URL = process.env.API_URL
-
 export async function GET() {
- const result = await fetch(API_URL, {
+ const result = await fetch('https://dummyjson.com/products', {
   headers: {
    'Content-type': 'application/json',
   },
