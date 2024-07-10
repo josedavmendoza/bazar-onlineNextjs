@@ -29,7 +29,7 @@ export default function Details() {
  const [error, setError] = useState(null)
  const sendTerm = (formData: any) => {
   const term = formData.get('term')
-  router.push(`http://localhost:3000/results?search=${term}`)
+  router.push(`/results?search=${term}`)
  }
 
  useEffect(() => {
@@ -38,7 +38,7 @@ export default function Details() {
    setError(null)
 
    try {
-    const response = await fetch(`http://localhost:3000/api/${param}`)
+    const response = await fetch(`/api/${param}`)
 
     if (!response.ok) {
      throw new Error(`API request failed with status${response.status}`)

@@ -8,7 +8,7 @@ export default function Home() {
  const router = useRouter()
 
  const handleSearch = () => {
-  router.push(`http://localhost:3000/results?search=${searchTerm}`)
+  router.push(`/results?search=${searchTerm}`)
  }
 
  return (

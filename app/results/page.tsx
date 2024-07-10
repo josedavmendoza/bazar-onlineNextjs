@@ -94,7 +94,7 @@ export default function Results() {
 
  const handleItemClick = (event: React.MouseEvent<HTMLDivElement>) => {
   const itemId = event.currentTarget.id
-  router.push(`http://localhost:3000/details?id=${itemId}`)
+  router.push(`/details?id=${itemId}`)
   console.log(itemId)
  }
 
