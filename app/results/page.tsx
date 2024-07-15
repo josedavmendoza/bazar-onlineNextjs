@@ -100,15 +100,15 @@ export default function Results() {
 
  return (
   <div>
-   <header className="h-100 mt-5 flex items-center justify-evenly">
+   <header className="mt-[10px] flex h-[85px] items-center justify-evenly">
     <BazarIcon height={80} width={65} />
     <div className="mt-[20px]">
      <form
       action={sendTerm}
-      className="mb-[15px] flex h-[40px] w-[270px] items-center justify-around rounded bg-gray-200 shadow"
+      className="mb-[15px] flex h-[40px] w-[228px] items-center justify-around rounded bg-gray-200 shadow"
      >
       <input
-       className="max-w-[200px] bg-gray-200 text-base outline-none"
+       className="max-w-[150px] bg-gray-200 text-base outline-none"
        type="text"
        name="term"
        placeholder="Search"
@@ -131,16 +131,18 @@ export default function Results() {
      </form>
     </div>
    </header>
-   <h1 className="mt-5 text-center text-lg font-semibold">
+   <h1 className="text-center text-[16px] font-semibold">
     Search results for "{searchTerm}": {filteredProducts.length}
    </h1>
-   <section className="mt-5">
+   <section className="mb-[15px] mt-[5px]">
     <div className="flex items-center justify-evenly text-base font-bold">
-     <div className="flex h-[40px] w-[150px] items-center justify-center bg-[#5f70b8cb]">
-      <span>Categories - {categories.length}</span>
+     <div className="flex h-[35px] w-[150px] items-center justify-center bg-[#5f70b8cb]">
+      <span className="text-sm  font-extrabold">
+       Categories - {categories.length}
+      </span>
      </div>
-     <div className=" flex h-[40px] w-[150px] items-center justify-center bg-red-600">
-      <span>Brands - {brands.length}</span>
+     <div className=" flex h-[35px] w-[150px] items-center justify-center bg-red-600">
+      <span className="text-sm font-extrabold">Brands - {brands.length}</span>
      </div>
     </div>
    </section>
@@ -148,26 +150,26 @@ export default function Results() {
     <div
      key={product.id}
      id={product.id.toString()}
-     className="mb-[20px] mt-[20px] flex cursor-pointer items-center justify-evenly"
+     className="mt-[11px] flex cursor-pointer items-center justify-evenly"
      onClick={handleItemClick}
     >
      <img
-      className="h-[150px] w-[150px] rounded-full"
+      className="h-[120px] w-[120px] rounded-full"
       src={product.thumbnail}
       alt={product.title}
      />
      <div className="w-205">
-      <h1 className="max-w-[200px] overflow-hidden overflow-ellipsis whitespace-nowrap text-2xl font-extrabold">
+      <h1 className="max-w-[200px] overflow-hidden overflow-ellipsis whitespace-nowrap text-[22px] font-extrabold">
        {product.title}
       </h1>
-      <p className="max-w-[200px] overflow-ellipsis font-light">
+      <p className="line-clamp-4 h-[90px] max-w-[200px] text-[15px] font-light">
        {product.description}
       </p>
-      <div className="flex justify-between">
-       <span className="inline font-sans text-2xl font-black">
+      <div className="flex items-center justify-between">
+       <span className="inline font-sans text-[22px] font-black">
         {product.price}
        </span>
-       <StarRating ratingProduct={product.rating} />
+       <StarRating ratingProduct={product.rating} size={20} />
       </div>
      </div>
     </div>

@@ -12,7 +12,7 @@ export default function Home() {
  }
 
  return (
-  <div className="flex h-screen w-full flex-col items-center justify-center">
+  <div className="mt-[120px] flex h-screen w-full flex-col items-center">
    <BazarIcon width={150} height={150} />
    <h1 className="mb-[15px] mt-[15px] text-4xl font-extrabold">Bazar Online</h1>
    <form action={handleSearch}>

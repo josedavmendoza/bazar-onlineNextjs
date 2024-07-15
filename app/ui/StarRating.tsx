@@ -4,9 +4,10 @@ import { IoStar } from 'react-icons/io5'
 
 interface StarRatingProps {
  ratingProduct: number
+ size: number
 }
 
-export default function StarRating({ ratingProduct }: StarRatingProps) {
+export default function StarRating({ ratingProduct, size }: StarRatingProps) {
  const [rating, setRating] = useState<number>(ratingProduct)
  return (
   <div className="flex">
@@ -26,7 +27,7 @@ export default function StarRating({ ratingProduct }: StarRatingProps) {
       <IoStar
        className="cursor-pointer"
        color={ratingValue <= rating ? '#ffc107' : '#e4e5e9'}
-       size={25}
+       size={size}
       />
      </label>
     )

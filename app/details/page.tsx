@@ -85,15 +85,15 @@ export default function Details() {
 
  return (
   <div>
-   <header className="mt-[15px] flex h-[100px] items-center justify-evenly">
+   <header className="mt-[10px] flex h-[85px] items-center justify-evenly ">
     <BazarIcon height={80} width={65} />
     <div className="mt-[20px]">
      <form
       action={sendTerm}
-      className="mb-[15px] flex h-[40px] w-[270px] items-center justify-around rounded bg-gray-200 shadow"
+      className="mb-[15px] flex h-[40px] w-[228px] items-center justify-around rounded bg-gray-200 shadow"
      >
       <input
-       className="max-w-[200px] bg-gray-200 text-base outline-none"
+       className="max-w-[150px] bg-gray-200 text-base outline-none"
        type="text"
        name="term"
        placeholder="Search"
@@ -117,16 +117,16 @@ export default function Details() {
     </div>
    </header>
    <>
-    <div className="flex items-center justify-evenly">
+    <div className="flex items-center justify-evenly ">
      <img
-      className="h-[210px] w-[210px] rounded-full"
+      className="h-[180px] w-[180px] rounded-full"
       src={thumbnail}
       alt={title}
      />
      <div className=" flex-wrap">
       {images.map((imageURL) => (
        <img
-        className="flex h-[80px] w-[80px] rounded-full"
+        className="flex h-[75px] w-[75px] rounded-full"
         src={imageURL}
         alt={title}
         key={imageURL}
@@ -134,20 +134,20 @@ export default function Details() {
       ))}
      </div>
     </div>
-    <section className="mb-[60px]  flex-wrap items-center justify-center ">
-     <h1 className="mb-[15px] mt-[15px] text-center text-3xl font-extrabold">
+    <section className="flex-wrap items-center justify-center ">
+     <h1 className="mb-[10px] mt-[15px] text-center text-[24px] font-black">
       {title}
      </h1>
      <div className="flex items-center justify-center">
       <div className="mr-[30px]">
        <h2 className="text-center font-sans text-2xl font-black">{price}</h2>
-       <span>{stock} Available</span>
+       <span className="text-[15px] font-black">{stock} Available</span>
       </div>
-      <StarRating ratingProduct={rating} />
+      <StarRating ratingProduct={rating} size={22} />
      </div>
-     <p className="mx-auto mt-[40px] w-[320px] ">{description}</p>
+     <p className="mx-auto mt-[20px] w-[294px] text-[15px]">{description}</p>
     </section>
-    <Button name="Buy" measures="h-[80px] w-[320px]" fontSize="text-4xl" />
+    <Button name="Buy" measures="h-[60px] w-[250px]" fontSize="text-4xl" />
    </>
   </div>
  )
