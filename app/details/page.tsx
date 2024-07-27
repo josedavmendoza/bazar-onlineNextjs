@@ -5,6 +5,11 @@ import Button from '../ui/Button'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import StarRating from '../ui/StarRating'
+import Slider from 'react-slick'
+
+import '../slick.css'
+import '../slick-theme.css'
+import { CgClose } from 'react-icons/cg'
 
 interface Product {
  id: number
@@ -27,6 +32,9 @@ export default function Details() {
  const [productData, setProductData] = useState<Product | null>(null)
  const [isLoading, setLoading] = useState(false)
  const [error, setError] = useState(null)
+ const [isFullScreen, setIsFullscreen] = useState(false)
+ const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
  const sendTerm = (formData: any) => {
   const term = formData.get('term')
   router.push(`/results?search=${term}`)
@@ -41,18 +49,19 @@ export default function Details() {
     const response = await fetch(`/api/${param}`)
 
     if (!response.ok) {
-     throw new Error(`API request failed with status${response.status}`)
+     throw new Error(`API request failed with status ${response.status}`)
     }
 
     const data = await response.json()
     console.log(data)
     setProductData(data.data)
    } catch (err) {
-    setError(null)
+    console.log(err)
    } finally {
     setLoading(false)
    }
   }
+
   if (param) {
    fetchData()
   }
@@ -82,6 +91,23 @@ export default function Details() {
   thumbnail,
   images,
  } = productData
+
+ const handleOpenFullScreen = (index: number) => {
+  setIsFullscreen(true)
+  setCurrentImageIndex(index)
+ }
+
+ const handleCloseFullscreen = () => {
+  setIsFullscreen(false)
+ }
+
+ const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+ }
 
  return (
   <div>
@@ -116,39 +142,56 @@ export default function Details() {
      </form>
     </div>
    </header>
-   <>
-    <div className="flex items-center justify-evenly ">
-     <img
-      className="h-[180px] w-[180px] rounded-full"
-      src={thumbnail}
-      alt={title}
-     />
-     <div className=" flex-wrap">
-      {images.map((imageURL) => (
-       <img
-        className="flex h-[75px] w-[75px] rounded-full"
-        src={imageURL}
-        alt={title}
-        key={imageURL}
-       />
-      ))}
-     </div>
+   <div className="flex items-center justify-evenly ">
+    <img
+     className="h-[180px] w-[180px] cursor-pointer rounded-full"
+     src={thumbnail}
+     alt={title}
+     onClick={() => handleOpenFullScreen(0)}
+    />
+    <div className=" flex-wrap">
+     {images.map((imageURL) => (
+      <img
+       className="flex h-[75px] w-[75px] cursor-pointer rounded-full"
+       src={imageURL}
+       alt={title}
+       key={imageURL}
+       onClick={() => handleOpenFullScreen(currentImageIndex)}
+      />
+     ))}
     </div>
-    <section className="flex-wrap items-center justify-center ">
-     <h1 className="mb-[10px] mt-[15px] text-center text-[24px] font-black">
-      {title}
-     </h1>
-     <div className="flex items-center justify-center">
-      <div className="mr-[30px]">
-       <h2 className="text-center font-sans text-2xl font-black">{price}</h2>
-       <span className="text-[15px] font-black">{stock} Available</span>
-      </div>
-      <StarRating ratingProduct={rating} size={22} />
+   </div>
+   {isFullScreen && (
+    <div className="fixed left-0 top-0 z-50 h-full w-full bg-black bg-opacity-75">
+     <button
+      onClick={handleCloseFullscreen}
+      className="fixed right-[20px] top-[20px] z-[51] bg-black bg-opacity-35"
+     >
+      <CgClose className="h-[40px] w-[40px] text-white" />
+     </button>
+     <Slider {...settings}>
+      {images.map((imageURL, index) => (
+       <div className="mt-[120px]" key={index}>
+        <img src={imageURL} alt={title} />
+       </div>
+      ))}
+     </Slider>
+    </div>
+   )}
+   <section className="flex-wrap items-center justify-center ">
+    <h1 className="mb-[10px] mt-[15px] text-center text-[24px] font-black">
+     {title}
+    </h1>
+    <div className="flex items-center justify-center">
+     <div className="mr-[30px]">
+      <h2 className="text-center font-sans text-2xl font-black">{price}$</h2>
+      <span className="text-[15px] font-black">{stock} Available</span>
      </div>
-     <p className="mx-auto mt-[20px] w-[294px] text-[15px]">{description}</p>
-    </section>
-    <Button name="Buy" measures="h-[60px] w-[250px]" fontSize="text-4xl" />
-   </>
+     <StarRating ratingProduct={rating} size={22} />
+    </div>
+    <p className="mx-auto mt-[20px] w-[294px] text-[15px]">{description}</p>
+   </section>
+   <Button name="Buy" measures="h-[60px] w-[250px]" fontSize="text-4xl" />
   </div>
  )
 }
