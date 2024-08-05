@@ -41,7 +41,7 @@ export default function Home() {
     <div className="flex justify-center">
      <button
       type="submit"
-      className={`mb-[40px] mt-[10px] h-[40px] w-[170px] rounded-full bg-red-600 text-2xl shadow`}
+      className={`mb-[40px] mt-[10px] h-[40px] w-[170px] rounded-full bg-[#ee6c4d] text-2xl font-medium shadow`}
      >
       Search
      </button>

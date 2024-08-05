@@ -136,12 +136,12 @@ export default function Results() {
    </h1>
    <section className="mb-[15px] mt-[5px]">
     <div className="flex items-center justify-evenly text-base font-bold">
-     <div className="flex h-[35px] w-[150px] items-center justify-center bg-[#5f70b8cb]">
+     <div className="flex h-[35px] w-[150px] items-center justify-center bg-[#7382bf]">
       <span className="text-sm  font-extrabold">
        Categories - {categories.length}
       </span>
      </div>
-     <div className=" flex h-[35px] w-[150px] items-center justify-center bg-red-600">
+     <div className=" flex h-[35px] w-[150px] items-center justify-center bg-[#ee6c4d]">
       <span className="text-sm font-extrabold">Brands - {brands.length}</span>
      </div>
     </div>

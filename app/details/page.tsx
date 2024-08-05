@@ -10,6 +10,7 @@ import Slider from 'react-slick'
 import '../slick.css'
 import '../slick-theme.css'
 import { CgClose } from 'react-icons/cg'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 interface Product {
  id: number
@@ -103,10 +104,13 @@ export default function Details() {
 
  const settings = {
   dots: true,
-  infinite: true,
+  infinite: false,
   speed: 500,
   slidesToShow: 1,
   slidesToScroll: 1,
+  arrows: true,
+  prevArrow: <IoIosArrowBack />,
+  nextArrow: <IoIosArrowForward />,
  }
 
  return (
@@ -171,8 +175,8 @@ export default function Details() {
      </button>
      <Slider {...settings}>
       {images.map((imageURL, index) => (
-       <div className="mt-[120px]" key={index}>
-        <img src={imageURL} alt={title} />
+       <div className="mt-[100px]" key={index}>
+        <img className=" md:h-[600px] md:w-[auto]" src={imageURL} alt={title} />
        </div>
       ))}
      </Slider>
@@ -191,7 +195,13 @@ export default function Details() {
     </div>
     <p className="mx-auto mt-[20px] w-[294px] text-[15px]">{description}</p>
    </section>
-   <Button name="Buy" measures="h-[60px] w-[250px]" fontSize="text-4xl" />
+   <div className="flex justify-center">
+    <button
+     className={`mb-[40px] mt-[10px] h-[60px] w-[250px] rounded-full bg-[#ee6c4d] text-4xl font-medium shadow`}
+    >
+     Buy
+    </button>
+   </div>
   </div>
  )
 }
