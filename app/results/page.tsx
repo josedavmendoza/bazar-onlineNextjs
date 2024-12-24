@@ -29,7 +29,7 @@ export default function Results() {
   brand: string
   category: string
   thumbnail: string
-  image: string[]
+  images: string[]
  }
 
  const fetchProducts = async () => {
@@ -112,7 +112,6 @@ export default function Results() {
        type="text"
        name="term"
        placeholder="Search"
-       required
       />
       <button type="submit">
        <svg

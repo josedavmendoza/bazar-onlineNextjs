@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import StarRating from '../ui/StarRating'
 import Slider from 'react-slick'
-
+import Image from 'next/image'
 import '../slick.css'
-import '../slick-theme.css'
+import './slick-theme.css'
 import { CgClose } from 'react-icons/cg'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
@@ -23,6 +23,7 @@ interface Product {
  brand: string
  thumbnail: string
  images: string[]
+ image: string
 }
 
 export default function Details() {
@@ -91,6 +92,7 @@ export default function Details() {
   brand,
   thumbnail,
   images,
+  image,
  } = productData
 
  const handleOpenFullScreen = (index: number) => {
@@ -127,7 +129,6 @@ export default function Details() {
        type="text"
        name="term"
        placeholder="Search"
-       required
       />
       <button type="submit">
        <svg
@@ -147,20 +148,24 @@ export default function Details() {
     </div>
    </header>
    <div className="flex items-center justify-evenly ">
-    <img
-     className="h-[180px] w-[180px] cursor-pointer rounded-full"
-     src={thumbnail}
+    <Image
+     className="cursor-pointer rounded-full"
+     height={180}
+     width={180}
+     src={thumbnail || image}
      alt={title}
      onClick={() => handleOpenFullScreen(0)}
     />
     <div className=" flex-wrap">
      {images.map((imageURL) => (
-      <img
-       className="flex h-[75px] w-[75px] cursor-pointer rounded-full"
+      <Image
+       className="flex cursor-pointer rounded-full"
+       height={75}
+       width={75}
        src={imageURL}
        alt={title}
        key={imageURL}
-       onClick={() => handleOpenFullScreen(currentImageIndex)}
+       onClick={() => handleOpenFullScreen(0)}
       />
      ))}
     </div>
@@ -176,7 +181,13 @@ export default function Details() {
      <Slider {...settings}>
       {images.map((imageURL, index) => (
        <div className="mt-[100px]" key={index}>
-        <img className=" md:h-[600px] md:w-[auto]" src={imageURL} alt={title} />
+        <Image
+         className="h-[360px] w-[auto] md:h-[700px]"
+         height={600}
+         width={600}
+         src={imageURL}
+         alt={title}
+        />
        </div>
       ))}
      </Slider>

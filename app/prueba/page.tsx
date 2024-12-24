@@ -1,135 +1,103 @@
 'use client'
-import { useSearchParams } from 'next/navigation'
 import BazarIcon from '../ui/BazarIcon'
-import Button from '../ui/Button'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import StarRating from '../ui/StarRating'
 import Slider from 'react-slick'
-
 import '../slick.css'
 import '../slick-theme.css'
-import { CgClose } from 'react-icons/cg'
+import axios from 'axios'
 
 interface Product {
  id: number
  title: string
- description: string
- price: string
- discounPercentage: number
- rating: number
- stock: number
- brand: string
  thumbnail: string
- images: string[]
 }
 
-export default function Details() {
- const searchParams = useSearchParams()
- const param = searchParams.get('id')
+interface Category {
+ slug: string
+ name: string
+ url: string
+}
+
+export default function Home() {
+ const [searchTerm, setSearchTerm] = useState('')
+ const [categories, setCategories] = useState<Category[]>([])
+ const [productsByCategory, setProductsByCategory] = useState<{
+  [key: string]: Product[]
+ }>({})
+ const categoriesPerGrid = 16
+ const categoriesGrids = []
+ for (let i = 0; i < categories.length; i += categoriesPerGrid) {
+  categoriesGrids.push(categories.slice(i, i + categoriesPerGrid))
+ }
+
  const router = useRouter()
 
- const [productData, setProductData] = useState<Product | null>(null)
- const [isLoading, setLoading] = useState(false)
- const [error, setError] = useState(null)
- const [isFullScreen, setIsFullscreen] = useState(false)
- const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
- const sendTerm = (formData: any) => {
-  const term = formData.get('term')
-  router.push(`/results?search=${term}`)
+ const handleSearch = () => {
+  router.push(`/results?search=${searchTerm}`)
  }
 
  useEffect(() => {
-  const fetchData = async () => {
-   setLoading(true)
-   setError(null)
+  const fetchCategoriesAndProducts = async () => {
+   const response = await axios.get('https://dummyjson.com/products/categories')
+   setCategories(response.data)
 
-   try {
-    const response = await fetch(`/api/${param}`)
+   const productsByCategoryTemp: { [key: string]: Product[] } = {}
 
-    if (!response.ok) {
-     throw new Error(`API request failed with status ${response.status}`)
-    }
-
-    const data = await response.json()
-    console.log(data)
-    setProductData(data.data)
-   } catch (err) {
-    console.log(err)
-   } finally {
-    setLoading(false)
+   for (const category of response.data) {
+    const productResponse = await axios.get(category.url)
+    productsByCategoryTemp[category.slug] = productResponse.data.products
    }
+
+   setProductsByCategory(productsByCategoryTemp)
   }
 
-  if (param) {
-   fetchData()
-  }
- }, [param])
-
- if (isLoading) {
-  return console.log('Loading...')
- }
-
- if (error) {
-  return console.log('ERROR')
- }
-
- if (!productData) {
-  return console.log('Product not found')
- }
-
- const {
-  id,
-  title,
-  description,
-  price,
-  discounPercentage,
-  rating,
-  stock,
-  brand,
-  thumbnail,
-  images,
- } = productData
-
- const handleOpenFullScreen = (index: number) => {
-  setIsFullscreen(true)
-  setCurrentImageIndex(index)
- }
-
- const handleCloseFullscreen = () => {
-  setIsFullscreen(false)
- }
+  fetchCategoriesAndProducts()
+ }, [])
 
  const settings = {
-  dots: true,
-  infinite: true,
+  className: 'center',
+  centerMode: false,
+  infinite: false,
+  centerPadding: '60px',
+  slidesToShow: 4,
   speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1,
+  rows: 3,
+  slidesPerRow: 1,
  }
 
  return (
-  <div>
-   <header className="mt-[10px] flex h-[85px] items-center justify-evenly ">
-    <BazarIcon height={80} width={65} />
-    <div className="mt-[20px]">
-     <form
-      action={sendTerm}
-      className="mb-[15px] flex h-[40px] w-[228px] items-center justify-around rounded bg-gray-200 shadow"
-     >
-      <input
-       className="max-w-[150px] bg-gray-200 text-base outline-none"
-       type="text"
-       name="term"
-       placeholder="Search"
-       required
+  <main className="md:h-full md:bg-gray-200">
+   <nav className="flex justify-center md:h-[100px] md:bg-[#98c1d9]">
+    <div className="mt-[120px] md:mx-auto md:my-auto md:flex md:h-[80px] md:w-[1070px]">
+     <div className="flex flex-col items-center md:block md:h-[80px] md:w-[120px]">
+      <BazarIcon
+       className="md:mx-auto md:mt-[8px] md:h-[50px] md:w-[50px]"
+       width={150}
+       height={150}
       />
-      <button type="submit">
+      <h1 className="mb-[15px] mt-[15px] text-center text-4xl font-extrabold md:my-auto md:text-base">
+       Bazar Online
+      </h1>
+     </div>
+     <form
+      className="flex flex-col items-center md:ml-[41px] md:inline-block"
+      action={handleSearch}
+     >
+      <div className="mb-[15px] flex h-[50px] w-[310px] items-center justify-evenly rounded bg-gray-200 md:mb-0 md:inline-flex md:h-[40px] md:w-[506.89px] md:justify-normal md:bg-white md:shadow">
+       <input
+        className=" md:placeholder:inherit max-w-[506px] bg-gray-200 outline-none md:ml-[15px] md:w-[450px] md:bg-white md:placeholder:text-[14.50px] md:placeholder:font-light md:placeholder:text-slate-500"
+        type="text"
+        value={searchTerm}
+        placeholder="Buscar productos, marcas y más... "
+        onChange={(e) => setSearchTerm(e.target.value)}
+        required
+       />
        <svg
+        className="md:ml-[5px]"
         xmlns="http://www.w3.org/2000/svg"
-        width={25}
-        height={800}
+        width={18}
+        height={20}
         fill="none"
         viewBox="0 0 24 24"
        >
@@ -138,60 +106,82 @@ export default function Details() {
          <path strokeLinecap="round" d="m18.155 18.155 3.732 3.732" />
         </g>
        </svg>
+      </div>
+      <button
+       type="submit"
+       className="mb-[40px] mt-[10px] h-[40px] w-[170px] rounded-full bg-[#ee6c4d] text-2xl font-medium shadow md:inline-block md:hidden md:w-[135px]"
+      >
+       Search
       </button>
      </form>
     </div>
-   </header>
-   <div className="flex items-center justify-evenly ">
-    <img
-     className="h-[180px] w-[180px] cursor-pointer rounded-full"
-     src={thumbnail}
-     alt={title}
-     onClick={() => handleOpenFullScreen(0)}
-    />
-    <div className=" flex-wrap">
-     {images.map((imageURL) => (
-      <img
-       className="flex h-[75px] w-[75px] cursor-pointer rounded-full"
-       src={imageURL}
-       alt={title}
-       key={imageURL}
-       onClick={() => handleOpenFullScreen(currentImageIndex)}
-      />
-     ))}
-    </div>
-   </div>
-   {isFullScreen && (
-    <div className="fixed left-0 top-0 z-50 h-full w-full bg-black bg-opacity-75">
-     <button
-      onClick={handleCloseFullscreen}
-      className="fixed right-[20px] top-[20px] z-[51] bg-black bg-opacity-35"
+   </nav>
+   <div className="hidden md:mx-auto md:my-[42px] md:flex md:w-[1070px] md:justify-between">
+    {categories?.slice(3, 6).map((category) => (
+     <div
+      className="shadow-[theme(boxShadow.card-shadow)] md:h-[445px] md:w-[346px] md:bg-white md:[border-radius:6px]"
+      key={category.slug}
      >
-      <CgClose className="h-[40px] w-[40px] text-white" />
-     </button>
-     <Slider {...settings}>
-      {images.map((imageURL, index) => (
-       <div className="mt-[120px]" key={index}>
-        <img src={imageURL} alt={title} />
-       </div>
-      ))}
-     </Slider>
-    </div>
-   )}
-   <section className="flex-wrap items-center justify-center ">
-    <h1 className="mb-[10px] mt-[15px] text-center text-[24px] font-black">
-     {title}
-    </h1>
-    <div className="flex items-center justify-center">
-     <div className="mr-[30px]">
-      <h2 className="text-center font-sans text-2xl font-black">{price}$</h2>
-      <span className="text-[15px] font-black">{stock} Available</span>
+      <h2 className="md:my-[16px] md:ml-[20px] md:text-[17px] md:font-semibold">
+       {category.name}
+      </h2>
+      {productsByCategory[category.slug]?.[0] && (
+       <img
+        onClick={() => {
+         router.push(`/results?search=${category.slug}`)
+        }}
+        className="mx-auto h-[285px]"
+        src={productsByCategory[category.slug][0].thumbnail}
+        alt={productsByCategory[category.slug][0].title}
+       />
+      )}
+      <div className="flex w-[345px] md:my-[13px] md:items-center md:justify-evenly">
+       {productsByCategory[category.slug]?.slice(1, 5).map((product) => (
+        <div
+         className="md:flex md:rounded md:border md:border-gray-300 md:bg-white md:hover:border-blue-600"
+         key={product.id}
+        >
+         <img
+          onClick={() => {
+           router.push(`/results?search=${product.title}`)
+          }}
+          className="md:h-[65px] md:w-[65px]"
+          src={product.thumbnail}
+          alt={product.title}
+         />
+        </div>
+       ))}
+      </div>
      </div>
-     <StarRating ratingProduct={rating} size={22} />
-    </div>
-    <p className="mx-auto mt-[20px] w-[294px] text-[15px]">{description}</p>
-   </section>
-   <Button name="Buy" measures="h-[60px] w-[250px]" fontSize="text-4xl" />
-  </div>
+    ))}
+   </div>
+   <div className="hidden md:mx-auto md:block md:h-[431px] md:w-[1070px] md:rounded md:bg-white">
+    <h2 className="ml-[20px] pb-[30px] pt-5 text-[17px] font-semibold">
+     Categories
+    </h2>
+    <Slider {...settings}>
+     {categories?.map((category) => (
+      <div
+       className="border border-gray-300 md:h-[97px] md:w-[247px] md:bg-white md:[border-radius:6px]"
+       key={category.slug}
+      >
+       {productsByCategory[category.slug]?.[0] && (
+        <img
+         onClick={() => {
+          router.push(`/results?search=${category.slug}`)
+         }}
+         className="mx-[16px] h-[67px] w-[70px]"
+         src={productsByCategory[category.slug][0].thumbnail}
+         alt={productsByCategory[category.slug][0].title}
+        />
+       )}
+       <h2 className="md:ml-[11px] md:text-[15px] md:font-semibold">
+        {category.name}
+       </h2>
+      </div>
+     ))}
+    </Slider>
+   </div>
+  </main>
  )
 }

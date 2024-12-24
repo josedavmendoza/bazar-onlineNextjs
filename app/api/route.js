@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
- const result = await fetch('https://dummyjson.com/products', {
+ const result = await fetch('https://dummyjson.com/products?limit=0&skip=0', {
   headers: {
    'Content-type': 'application/json',
   },
  })
+
  const products = await result.json()
  return NextResponse.json({ data: products })
 }
