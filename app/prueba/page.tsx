@@ -19,17 +19,19 @@ interface Category {
  url: string
 }
 
+interface CustomSlideProps {
+ category: {
+  slug: string
+  name: string
+ }
+}
+
 export default function Home() {
  const [searchTerm, setSearchTerm] = useState('')
  const [categories, setCategories] = useState<Category[]>([])
  const [productsByCategory, setProductsByCategory] = useState<{
   [key: string]: Product[]
  }>({})
- const categoriesPerGrid = 16
- const categoriesGrids = []
- for (let i = 0; i < categories.length; i += categoriesPerGrid) {
-  categoriesGrids.push(categories.slice(i, i + categoriesPerGrid))
- }
 
  const router = useRouter()
 
@@ -55,11 +57,31 @@ export default function Home() {
   fetchCategoriesAndProducts()
  }, [])
 
+ const CustomSlide: React.FC<CustomSlideProps> = ({ category }) => {
+  return (
+   <div className="mb-[20px] flex h-[97px] w-[248px] items-center border border-gray-300 bg-white [border-radius:6px]">
+    {productsByCategory[category.slug]?.[0] && (
+     <img
+      onClick={() => {
+       router.push(`/results?search=${category.slug}`)
+      }}
+      className="mx-[16px] h-[67px] w-[70px]"
+      src={productsByCategory[category.slug][0].thumbnail}
+      alt={productsByCategory[category.slug][0].title}
+     />
+    )}
+    <p className="mx-[11px] text-[15px] font-semibold hover:text-sky-500">
+     {category.name}
+    </p>
+   </div>
+  )
+ }
+
  const settings = {
   className: 'center',
   centerMode: false,
   infinite: false,
-  centerPadding: '60px',
+  centerPadding: '100px',
   slidesToShow: 4,
   speed: 500,
   rows: 3,
@@ -67,7 +89,7 @@ export default function Home() {
  }
 
  return (
-  <main className="md:h-full md:bg-gray-200">
+  <main className="md:h-full md:bg-[#e7e7e7]">
    <nav className="flex justify-center md:h-[100px] md:bg-[#98c1d9]">
     <div className="mt-[120px] md:mx-auto md:my-auto md:flex md:h-[80px] md:w-[1070px]">
      <div className="flex flex-col items-center md:block md:h-[80px] md:w-[120px]">
@@ -155,33 +177,44 @@ export default function Home() {
      </div>
     ))}
    </div>
-   <div className="hidden md:mx-auto md:block md:h-[431px] md:w-[1070px] md:rounded md:bg-white">
-    <h2 className="ml-[20px] pb-[30px] pt-5 text-[17px] font-semibold">
+   <div className="hidden md:mx-auto md:block md:h-[421px] md:w-[1070px] md:rounded md:bg-white">
+    <h2 className="ml-[20px] pb-[20px] pt-[20px] text-[18.80px] font-semibold">
      Categories
     </h2>
     <Slider {...settings}>
      {categories?.map((category) => (
-      <div
-       className="border border-gray-300 md:h-[97px] md:w-[247px] md:bg-white md:[border-radius:6px]"
-       key={category.slug}
-      >
-       {productsByCategory[category.slug]?.[0] && (
-        <img
-         onClick={() => {
-          router.push(`/results?search=${category.slug}`)
-         }}
-         className="mx-[16px] h-[67px] w-[70px]"
-         src={productsByCategory[category.slug][0].thumbnail}
-         alt={productsByCategory[category.slug][0].title}
-        />
-       )}
-       <h2 className="md:ml-[11px] md:text-[15px] md:font-semibold">
-        {category.name}
-       </h2>
-      </div>
+      <CustomSlide key={category.slug} category={category} />
      ))}
     </Slider>
    </div>
+   <footer className="hidden md:mt-[64px] md:flex md:h-[72.74px] md:items-center md:bg-[#fff]">
+    <div className="mx-auto md:w-[1070px]">
+     <nav>
+      <ul>
+       <li className="mb-[8px] mr-[16px] inline font-[-apple-system,roboto,arial,sans-serif] text-[12.60px] ">
+        Trabaja para nosotros
+       </li>
+       <li className="mb-[8px] mr-[16px] inline font-[-apple-system,roboto,arial,sans-serif] text-[12.60px] ">
+        Términos y Condiciones
+       </li>
+       <li className="mb-[8px] mr-[16px] inline font-[-apple-system,roboto,arial,sans-serif] text-[12.60px] ">
+        Cómo cuidamos tu privacidad
+       </li>
+       <li className="mb-[8px] mr-[16px] inline font-[-apple-system,roboto,arial,sans-serif] text-[12.60px] ">
+        Accesibilidad
+       </li>
+       <li className="mb-[8px] mr-[16px] inline font-[-apple-system,roboto,arial,sans-serif] text-[12.60px] ">
+        Ayuda
+       </li>
+      </ul>
+     </nav>
+     <div>
+      <small className="font-[-apple-system,roboto,arial,sans-serif] text-[12.64px] text-gray-500">
+       Copyright © 2024-2025 Bazar Online Venezuela
+      </small>
+     </div>
+    </div>
+   </footer>
   </main>
  )
 }

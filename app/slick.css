@@ -46,13 +46,13 @@
  position: relative;
  top: 0;
  left: 0;
- display: flex;
- margin-left: auto;
+ display: block;
+ margin-left: 20px;
  margin-right: auto;
 }
 .slick-track:before,
 .slick-track:after {
- display: table;
+ display: block;
 
  content: '';
 }
@@ -66,11 +66,14 @@
 .slick-slide {
  display: none;
  float: left;
- margin-left: 12px;
- margin-bottom: 20px;
  min-height: 1px;
  height: 100%;
 }
+
+.slick-active {
+ width: 263px !important;
+}
+
 [dir='rtl'] .slick-slide {
  float: right;
 }
