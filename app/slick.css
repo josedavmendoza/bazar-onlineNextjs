@@ -1,7 +1,6 @@
 /* Slider */
 .slick-slider {
  position: relative;
-
  display: block;
  box-sizing: border-box;
 
@@ -21,7 +20,6 @@
  position: relative;
  display: block;
  overflow: hidden;
-
  margin: 0;
  padding: 0;
 }
@@ -45,9 +43,9 @@
 .slick-track {
  position: relative;
  top: 0;
- left: 0;
+ left: 0px;
  display: block;
- margin-left: 20px;
+ margin-left: auto;
  margin-right: auto;
 }
 .slick-track:before,
@@ -64,14 +62,9 @@
 }
 
 .slick-slide {
- display: none;
+ display: flex;
  float: left;
  min-height: 1px;
- height: 100%;
-}
-
-.slick-active {
- width: 263px !important;
 }
 
 [dir='rtl'] .slick-slide {
@@ -101,4 +94,10 @@
 }
 .slick-arrow.slick-hidden {
  display: none;
+}
+
+.slick-thumb {
+ position: absolute;
+ top: 24px;
+ left: 24px;
 }
