@@ -15,11 +15,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, searchQuery }) => {
 
  return (
   <div className="cursor-pointer md:flex md:rounded md:border md:border-gray-300 md:bg-white md:hover:border-blue-600">
-   <img
+   <Image
     className="md:h-[65px] md:w-[65px]"
     src={product.thumbnail}
     alt={product.title}
     onClick={handleClick}
+    height={65}
+    width={65}
    />
   </div>
  )

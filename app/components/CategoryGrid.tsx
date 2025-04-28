@@ -1,5 +1,6 @@
 import React from 'react'
 import ProductCard from './ProductCard'
+import Image from 'next/image'
 
 interface CategoryGridProps {
  category: { slug: string; name: string }
@@ -18,11 +19,13 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
     {category.name}
    </p>
    {products?.[0] && (
-    <img
+    <Image
      onClick={() => onCategoryClick(category.slug)}
      className="mx-auto h-[285px]"
      src={products[0].thumbnail}
      alt={products[0].title}
+     height={285}
+     width={285}
     />
    )}
    <div className="flex w-[345px] md:my-[13px] md:items-center md:justify-evenly">

@@ -56,7 +56,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
      Minimum Ordered Quantity:{` (${minimumOrderQuantity})`}
     </span>
     <span className="hidden md:absolute md:top-[305px] md:block md:text-[13px] md:font-medium md:text-[#3483fa]">
-     "{returnPolicy}"
+     {`"${returnPolicy}"`}
     </span>
     <StarRating
      ratingProduct={rating}

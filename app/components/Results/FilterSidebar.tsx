@@ -1,5 +1,5 @@
 import { Product } from '@/app/types/product'
-import FilterCategory from './FIlterCategory'
+import FilterCategory from './FilterCategory'
 import FilterBrand from './FilterBrand'
 import ResultsHeader from './ResultsHeader'
 

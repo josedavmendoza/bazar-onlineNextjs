@@ -10,7 +10,7 @@ const ResultsHeader: React.FC<ResultsHeaderProps> = ({
  return (
   <>
    <p className="text-center text-[16px] font-semibold md:hidden md:text-[26px]">
-    Search results for "{searchTerm}": {filteredProductsCount}
+    Search results for {`"${searchTerm}"`}: {filteredProductsCount}
    </p>
    <p className="hidden md:mt-[56px] md:block md:text-[18.80px] md:font-[600]">
     {searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}

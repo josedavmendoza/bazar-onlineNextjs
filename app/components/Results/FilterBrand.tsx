@@ -18,6 +18,7 @@ const FilterBrand: React.FC<FilterBrandProps> = ({
    </span>
    {brands.map((brand) => (
     <span
+     key={brand}
      className="hidden cursor-pointer hover:underline md:block md:text-[13px] md:font-[400]"
      onClick={() => onBrandClick(brand)}
     >

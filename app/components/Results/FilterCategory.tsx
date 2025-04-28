@@ -16,6 +16,7 @@ const FilterCategory: React.FC<FilterCategoryProps> = ({
    </span>
    {categories.map((category) => (
     <span
+     key={category}
      onClick={() => onCategoryClick(category)}
      className="hidden hover:underline md:block md:cursor-pointer md:text-[13px] md:font-[400]"
     >
