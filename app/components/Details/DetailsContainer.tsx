@@ -1,18 +1,20 @@
 import { Product } from '@/app/types/product'
-import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProductImageGallery from './ProductImageGallery'
 import CustomPaging from './customPaging'
 import ModalWindow from './modalWindow'
 import ProductInfo from './ProductInfo'
+import { useSearchParams } from 'next/navigation'
 
 interface DetailsContainerProps {}
 
 const DetailsContainer: React.FC<DetailsContainerProps> = ({}) => {
+ return <DetailsContent />
+}
+
+function DetailsContent() {
  const searchParams = useSearchParams()
  const param = searchParams.get('id')
- const router = useRouter()
 
  const [productData, setProductData] = useState<Product | null>(null)
  const [isLoading, setLoading] = useState(false)
