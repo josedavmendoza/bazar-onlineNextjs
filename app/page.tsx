@@ -1,11 +1,10 @@
 'use client'
 import BazarIcon from './components/BazarIcon'
-import React, { Suspense, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CategorySlider from './components/categorySlider'
 import Footer from './components/Footer'
 import HomeContainer from './components/HomeContainer'
-import SliderSuspense from './components/SliderSuspense'
 
 export default function Home() {
  const [searchTerm, setSearchTerm] = useState('')
