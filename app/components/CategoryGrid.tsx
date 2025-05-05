@@ -22,6 +22,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
     <Image
      onClick={() => onCategoryClick(category.slug)}
      className="mx-auto h-[285px]"
+     priority={true}
      src={products[0].thumbnail}
      alt={products[0].title}
      height={285}

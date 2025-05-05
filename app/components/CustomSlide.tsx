@@ -27,6 +27,7 @@ const CustomSlide: React.FC<CustomSlideProps> = ({
    {productsByCategory[category.slug]?.[0] && (
     <Image
      className="mx-[16px] h-[67px] w-[70px]"
+     priority={true}
      src={productsByCategory[category.slug][0].thumbnail}
      alt={productsByCategory[category.slug][0].title}
      width={70}

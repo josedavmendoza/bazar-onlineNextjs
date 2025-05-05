@@ -3,8 +3,9 @@ import Slider from 'react-slick'
 import '../slick.css'
 import '../slick-theme.css'
 import CustomSlide from './CustomSlide'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
+import SliderSuspense from './SliderSuspense'
 
 interface Product {
  id: number

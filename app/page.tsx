@@ -1,10 +1,11 @@
 'use client'
 import BazarIcon from './components/BazarIcon'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CategorySlider from './components/categorySlider'
 import Footer from './components/Footer'
 import HomeContainer from './components/HomeContainer'
+import SliderSuspense from './components/SliderSuspense'
 
 export default function Home() {
  const [searchTerm, setSearchTerm] = useState('')
@@ -24,7 +25,7 @@ export default function Home() {
        width={150}
        height={150}
       />
-      <p className="mb-[15px] text-center text-4xl font-extrabold md:my-auto md:h-[24px] md:w-[120px] md:text-nowrap md:text-[14.85px] md:leading-[24px]">
+      <p className="md:my-au0to mb-[15px] text-center text-4xl font-extrabold md:h-[24px] md:w-[120px] md:text-nowrap md:text-[14.85px] md:leading-[24px]">
        Pocket Market
       </p>
      </div>
@@ -64,7 +65,6 @@ export default function Home() {
      </form>
     </div>
    </nav>
-
    <HomeContainer />
    <CategorySlider />
    <Footer />
