@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { CgClose } from 'react-icons/cg'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import Slider from 'react-slick'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface ModalWindowProps {
  handleCloseFullScreen: () => void
@@ -54,10 +54,29 @@ export default function ModalWindow({
  title,
 }: ModalWindowProps) {
  const [currentSlide, setCurrentSlide] = useState(currentImageIndex)
+ const sliderRef = useRef<Slider>(null)
 
  useEffect(() => {
   setCurrentSlide(currentImageIndex)
  }, [currentImageIndex])
+
+ useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+   if (sliderRef.current) {
+    if (event.key === 'ArrowLeft') {
+     sliderRef.current.slickPrev()
+    } else if (event.key === 'ArrowRight') {
+     sliderRef.current.slickNext()
+    }
+   }
+  }
+
+  window.addEventListener('keydown', handleKeyDown)
+
+  return () => {
+   window.removeEventListener('keydown', handleKeyDown)
+  }
+ }, [])
 
  var settings = {
   dots: true,
@@ -117,7 +136,7 @@ export default function ModalWindow({
     <CgClose className="h-[32px] w-[32px] bg-[rgba(0,0,0,.25)] text-white" />
    </button>
    <div className="relative top-[100px] md:static md:top-0">
-    <Slider {...settings} initialSlide={currentImageIndex}>
+    <Slider {...settings} initialSlide={currentImageIndex} ref={sliderRef}>
      {images.map((imageURL, index) => (
       <div className="mt-[50px]" key={index}>
        <Image

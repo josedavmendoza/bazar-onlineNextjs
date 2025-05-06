@@ -6,6 +6,7 @@ import CustomSlide from './CustomSlide'
 import { Suspense, useEffect, useState } from 'react'
 import axios from 'axios'
 import SliderSuspense from './SliderSuspense'
+import { Lancelot } from 'next/font/google'
 
 interface Product {
  id: number
@@ -23,7 +24,7 @@ function SamplePrevArrow(props: any) {
  const { className, style, onClick } = props
  return (
   <div
-   className={`${className} absolute !left-[-30px] top-[137px] flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-[50%] bg-white text-center shadow-[0_1px_2px_0_rgb(0,0,0,12%)] hover:shadow-[0_8px_16px_0_rgb(0,0,0,10%)]`}
+   className={`${className} absolute !left-[-30px] top-[137px] !flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-[50%] !bg-white text-center shadow-[0_1px_2px_0_rgb(0,0,0,12%)] hover:shadow-[0_8px_16px_0_rgb(0,0,0,10%)]`}
    onClick={onClick}
   >
    <IoIosArrowBack
@@ -41,7 +42,7 @@ function SampleNextArrow(props: any) {
  const { className, style, onClick } = props
  return (
   <div
-   className={`${className} absolute !right-[-30px] top-[137px] flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-[50%] bg-white text-center shadow-[0_1px_2px_0_rgb(0,0,0,12%)] hover:shadow-[0_8px_16px_0_rgb(0,0,0,10%)] `}
+   className={`${className} absolute !right-[-30px] top-[125px] !flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-[50%] !bg-white text-center shadow-[0_1px_2px_0_rgb(0,0,0,12%)] hover:shadow-[0_8px_16px_0_rgb(0,0,0,10%)]`}
    onClick={onClick}
   >
    <IoIosArrowForward
