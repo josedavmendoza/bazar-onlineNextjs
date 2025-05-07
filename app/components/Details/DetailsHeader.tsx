@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import BazarIcon from '../BazarIcon'
+import BazarIcon from '../home/BazarIcon'
 
 interface DetailsHeaderProps {
  onSearch: (formData: FormData) => void

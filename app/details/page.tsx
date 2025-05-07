@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 import DetailsHeader from '../components/Details/DetailsHeader'
 import DetailsContainer from '../components/Details/DetailsContainer'
-import Footer from '../components/Footer'
+import Footer from '../components/home/Footer'
 import { Suspense } from 'react'
 
 export default function Details() {

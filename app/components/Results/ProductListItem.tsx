@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import StarRating from '../StarRating'
+import StarRating from '@/app/components/home/StarRating'
 
 interface ProductListItemProps {
  product: {

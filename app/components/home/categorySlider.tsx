@@ -1,12 +1,10 @@
+// components/categorySlider.tsx
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import Slider from 'react-slick'
-import '../slick.css'
-import '../slick-theme.css'
-import CustomSlide from './CustomSlide'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import SliderSuspense from './SliderSuspense'
-import { Lancelot } from 'next/font/google'
+import CustomSlide from '../home/CustomSlide'
+import SliderSuspense from '../home/SliderSuspense'
 
 interface Product {
  id: number
@@ -61,26 +59,29 @@ export default function CategorySlider() {
  const [productsByCategory, setProductsByCategory] = useState<{
   [key: string]: Product[]
  }>({})
+ const [isLoading, setIsLoading] = useState(true) // Nuevo estado de carga
 
  useEffect(() => {
-  const fetchCategoriesAndProducts = async () => {
-   const response = await axios.get('https://dummyjson.com/products/categories')
-   setCategories(response.data)
+  const fetchCategories = axios.get('https://dummyjson.com/products/categories')
 
-   const productsByCategoryTemp: { [key: string]: Product[] } = {}
-
-   for (const category of response.data) {
-    const productResponse = await axios.get(category.url)
-    productsByCategoryTemp[category.slug] = productResponse.data.products
-   }
-
-   setProductsByCategory(productsByCategoryTemp)
-  }
-
-  fetchCategoriesAndProducts()
+  Promise.all([fetchCategories])
+   .then(([categoriesResponse]) => {
+    setCategories(categoriesResponse.data)
+    const productsByCategoryTemp: { [key: string]: Product[] } = {}
+    const productPromises = categoriesResponse.data.map(
+     async (category: Category) => {
+      const productResponse = await axios.get(category.url)
+      productsByCategoryTemp[category.slug] = productResponse.data.products
+     }
+    )
+    return Promise.all(productPromises).then(() => productsByCategoryTemp)
+   })
+   .then((productsByCategoryData) => {
+    setProductsByCategory(productsByCategoryData)
+   })
+   .catch((error) => console.error('Error fetching data:', error))
+   .finally(() => setIsLoading(false))
  }, [])
-
- console.log(productsByCategory)
 
  const settings = {
   centerMode: false,
@@ -94,19 +95,27 @@ export default function CategorySlider() {
  }
 
  return (
-  <div className="hidden md:mx-auto md:block md:h-[421px] md:w-[1070px] md:rounded-md md:bg-white md:shadow">
-   <p className="ml-[20px] pb-[20px] pt-[20px] text-[18.80px] font-semibold">
-    Categories
-   </p>
-   <Slider {...settings}>
-    {categories?.map((category) => (
-     <CustomSlide
-      key={category.slug}
-      category={category}
-      productsByCategory={productsByCategory}
-     />
-    ))}
-   </Slider>
+  <div>
+   {isLoading ? (
+    // Renderiza el fallback mientras isLoading sea true
+    <SliderSuspense />
+   ) : (
+    // Renderiza el componente real cuando isLoading sea false
+    <div className="hidden md:mx-auto md:block md:h-[421px] md:w-[1070px] md:rounded-md md:bg-white md:shadow">
+     <p className="ml-[20px] pb-[20px] pt-[20px] text-[18.80px] font-semibold">
+      Categories
+     </p>
+     <Slider {...settings}>
+      {categories?.map((category) => (
+       <CustomSlide
+        key={category.slug}
+        category={category}
+        productsByCategory={productsByCategory}
+       />
+      ))}
+     </Slider>
+    </div>
+   )}
   </div>
  )
 }

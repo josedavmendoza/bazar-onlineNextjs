@@ -1,10 +1,11 @@
 'use client'
-import BazarIcon from './components/BazarIcon'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import CategorySlider from './components/categorySlider'
-import Footer from './components/Footer'
-import HomeContainer from './components/HomeContainer'
+import BazarIcon from './components/home/BazarIcon'
+import HomeContainer from './components/home/HomeContainer'
+import CategoryGridFallback from './components/home/CategoryGridFallback'
+import CategorySlider from './components/home/categorySlider'
+import Footer from './components/home/Footer'
 
 export default function Home() {
  const [searchTerm, setSearchTerm] = useState('')
@@ -64,8 +65,12 @@ export default function Home() {
      </form>
     </div>
    </nav>
-   <HomeContainer />
-   <CategorySlider />
+   <Suspense fallback={<div>Loading main sections </div>}>
+    <HomeContainer />
+   </Suspense>
+   <Suspense fallback={<CategoryGridFallback />}>
+    <CategorySlider />
+   </Suspense>
    <Footer />
   </main>
  )

@@ -1,6 +1,6 @@
-import BazarIcon from '../BazarIcon'
+import BazarIcon from '../home/BazarIcon'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Footer from '../Footer'
+import Footer from '../home/Footer'
 import ResultsContainer from '../Results/ResultsContainer'
 import SearchBarResults from '../Results/SearchBarResults'
 

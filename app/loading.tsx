@@ -1,4 +1,4 @@
-import BazarIcon from './components/BazarIcon'
+import BazarIcon from './components/home/BazarIcon'
 
 export default function Loading() {
  return (
