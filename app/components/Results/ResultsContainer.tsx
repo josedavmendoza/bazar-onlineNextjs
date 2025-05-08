@@ -1,9 +1,11 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Suspense } from 'react'
 import { Product } from '@/app/types/product'
 import { useRouter, useSearchParams } from 'next/navigation'
-import FilterSidebar from './FilterSidebar'
-import SearchResultsList from './SearchResultsList'
+import FilterSidebarFallback from './filterSidebarFallback'
+import SearchResultsListFallback from './searchResultslistFallback'
+import FilterSidebar from '../Results/FilterSidebar'
+import SearchResultsList from '../Results/SearchResultsList'
 
 interface ResultsContainerProps {
  initialSearchTerm: string | null
@@ -20,18 +22,24 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
   {}
  )
  const [brandingCount, setBrandingCount] = useState<Record<string, number>>({})
+ const [isLoading, setIsLoading] = useState(true)
  const router = useRouter()
 
  const fetchProducts = async () => {
+  setIsLoading(true)
   try {
    const response = await fetch('/api')
    if (response) {
     const { data } = await response.json()
-    console.log(data)
-    if (data) setProducts(data.products)
+    if (data && data.products) {
+     setProducts(data.products)
+    }
    }
   } catch (error) {
-   console.log(error)
+   console.error('Error fetching products:', error)
+   // Consider setting an error state here
+  } finally {
+   setIsLoading(false)
   }
  }
 
@@ -101,24 +109,36 @@ const ResultsContainer: React.FC<ResultsContainerProps> = ({
  const handleBrandClick = (brand: string) => {
   router.push(`/results?search=${brand}`)
  }
+
  return (
   <div className="md:mx-auto md:mt-[65.59px] md:flex md:w-[1137.78px]">
-   <FilterSidebar
-    filteredProductsResults={filteredProducts}
-    searchTerm={searchTerm}
-    categories={categories}
-    categoryCounts={categoryCounts}
-    brands={brands}
-    brandingCount={brandingCount}
-    onCategoryClick={handleCategoryClick}
-    onBrandClick={handleBrandClick}
-   />
-   <section className="md:flex md:w-[744px] md:flex-col">
-    <SearchResultsList
-     products={filteredProducts}
-     onItemClick={handleItemClick}
-    />
-   </section>
+   {isLoading ? (
+    <>
+     <FilterSidebarFallback />
+     <section className="md:flex md:w-[744px] md:flex-col">
+      <SearchResultsListFallback />
+     </section>
+    </>
+   ) : (
+    <>
+     <FilterSidebar
+      filteredProductsResults={filteredProducts}
+      searchTerm={searchTerm}
+      categories={categories}
+      categoryCounts={categoryCounts}
+      brands={brands}
+      brandingCount={brandingCount}
+      onCategoryClick={handleCategoryClick}
+      onBrandClick={handleBrandClick}
+     />
+     <section className="md:flex md:w-[744px] md:flex-col">
+      <SearchResultsList
+       products={filteredProducts}
+       onItemClick={handleItemClick}
+      />
+     </section>
+    </>
+   )}
   </div>
  )
 }

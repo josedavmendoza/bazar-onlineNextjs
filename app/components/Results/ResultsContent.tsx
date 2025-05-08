@@ -1,8 +1,8 @@
 import BazarIcon from '../home/BazarIcon'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Footer from '../home/Footer'
-import ResultsContainer from '../Results/ResultsContainer'
 import SearchBarResults from '../Results/SearchBarResults'
+import ResultsContainer from '../Results/ResultsContainer'
 
 // Results component function
 export default function ResultsContent() {
