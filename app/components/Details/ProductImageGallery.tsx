@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import React from 'react'
 
 interface ProductImageGalleryProps {
  thumbnail: string
@@ -7,12 +8,12 @@ interface ProductImageGalleryProps {
  onOpenFullScreen: (index: number) => void
 }
 
-const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
+function ProductImageGalleryComponent({
  thumbnail,
  images,
  title,
  onOpenFullScreen,
-}) => {
+}: ProductImageGalleryProps) {
  return (
   <div className="relative flex items-center justify-evenly md:hidden md:h-[503.98px] md:w-[700px]">
    <Image
@@ -39,5 +40,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   </div>
  )
 }
+
+const ProductImageGallery = React.memo(ProductImageGalleryComponent)
 
 export default ProductImageGallery

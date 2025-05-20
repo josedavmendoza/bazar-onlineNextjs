@@ -1,10 +1,11 @@
 import { Product } from '@/app/types/product'
 import { useEffect, useState } from 'react'
-import ProductImageGallery from './ProductImageGallery'
-import CustomPaging from './customPaging'
-import ModalWindow from './modalWindow'
-import ProductInfo from './ProductInfo'
+import ProductImageGallery from '../Details/ProductImageGallery'
+import CustomPaging from '../Details/customPaging'
+import ModalWindow from '../Details/modalWindow'
+import ProductInfo from '../Details/ProductInfo'
 import { useSearchParams } from 'next/navigation'
+import DetailsContainerFallback from './detailsContainerFallback'
 
 interface DetailsContainerProps {}
 
@@ -17,14 +18,13 @@ function DetailsContent() {
  const param = searchParams.get('id')
 
  const [productData, setProductData] = useState<Product | null>(null)
- const [isLoading, setLoading] = useState(false)
+ const [isLoading, setLoading] = useState(true)
  const [error, setError] = useState<Error | null>(null)
  const [isFullScreen, setIsFullScreen] = useState(false)
  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
  useEffect(() => {
   const fetchData = async () => {
-   setLoading(true)
    setError(null)
 
    try {
@@ -48,25 +48,21 @@ function DetailsContent() {
  }, [param])
 
  if (isLoading) {
-  return (
-   <div className="hidden text-center md:h-[540px] md:w-[1050px] md:bg-white">
-    Loading...
-   </div>
-  )
+  return <DetailsContainerFallback />
  }
 
  if (error) {
   return (
-   <div className="hidden text-center md:h-[540px] md:w-[1050px] md:bg-white">
-    Error loading product details
+   <div className="flex items-center justify-center text-center md:h-[540px] md:w-[1050px] md:bg-white">
+    Error al cargar los detalles del producto.
    </div>
   )
  }
 
  if (!productData) {
   return (
-   <div className="hidden text-center md:h-[540px] md:w-[1050px] md:bg-white">
-    Product not found.
+   <div className="flex items-center justify-center text-center md:h-[540px] md:w-[1050px] md:bg-white">
+    Producto no encontrado.
    </div>
   )
  }
